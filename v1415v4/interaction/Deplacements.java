@@ -126,7 +126,10 @@ public class Deplacements implements IDeplacements {
     	
     	while (!teleporte) {
         	dest=new Point(r.nextInt(100), r.nextInt(100));
-            
+            ve.setPoint(dest);
+
+
+                teleporte = true;
         	// trouve les voisins sur la position de teleportation
         	try {
         		voisins = ve.getControleur().getArene().voisins(dest, ve.getRef());
@@ -137,10 +140,25 @@ public class Deplacements implements IDeplacements {
             
             //si le point destination est libre
             if (Calculs.caseVide(dest, voisins)) {
-                //l'element courant se deplace
-                ve.setPoint(dest);
-                teleporte = true;
+              //l'element courant se deplace
+    
             }
     	}
+    }
+    
+    public void fuir(Point cible, Point per) {
+    	Point dest = new Point();
+    	Random r= new Random();
+    	if(cible.x>per.x){
+    		dest.x=r.nextInt(per.x);
+    	}else{
+    		dest.x=per.x+(r.nextInt(99-per.x));
+    	}
+    	if(cible.y>per.y){
+    		dest.y=r.nextInt(per.y);
+    	}else{
+    		dest.y=per.y+r.nextInt(99-per.y);
+    	}
+    	seDirigerVers(dest);
     }
 }
