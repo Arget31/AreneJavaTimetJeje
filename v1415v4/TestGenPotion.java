@@ -8,9 +8,10 @@ public class TestGenPotion {
 
 	/**
 	 * @param args
+	 * @throws InterruptedException 
 	 * @throws RemoteException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException {
 
 		try {
 			int port=5099;	//par defaut, port de l'arene=5099
@@ -41,6 +42,7 @@ public class TestGenPotion {
 						break;
 					default:
 				}
+				Thread.sleep(1000);
 			}	
 		} catch (RemoteException e) {
 			e.printStackTrace();
