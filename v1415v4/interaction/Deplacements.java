@@ -143,4 +143,20 @@ public class Deplacements implements IDeplacements {
             }
     	}
     }
+    
+    public void fuir(Point cible, Point per) {
+    	Point dest = new Point();
+    	Random r= new Random();
+    	if(cible.x>per.x){
+    		dest.x=r.nextInt(per.x);
+    	}else{
+    		dest.x=per.x+(r.nextInt(99-per.x));
+    	}
+    	if(cible.y>per.y){
+    		dest.y=r.nextInt(per.y);
+    	}else{
+    		dest.y=per.y+r.nextInt(99-per.y);
+    	}
+    	seDirigerVers(dest);
+    }
 }

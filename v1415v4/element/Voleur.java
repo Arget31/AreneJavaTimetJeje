@@ -22,13 +22,7 @@ public class Voleur extends Personnage {
 		if(!actions.simulation(refRMI,refPlusProche,ve.getControleur().getArene())){
         		parler("Je me camoufle et me dirige vers mon voisin" + refPlusProche, ve);
 				setInvisibilite(10);
-				tamp.x=cible.getPoint().x;
-				tamp.y=cible.getPoint().y;
-				tamp.x=99-tamp.x;
-				tamp.y=99-tamp.y;
-				for(int i=0;i<5;i++){
-					deplacements.seDirigerVers(tamp);
-				}
+				deplacements.seDirigerVers(tamp);
 				setRechargement(60);
 		}
 		else{
