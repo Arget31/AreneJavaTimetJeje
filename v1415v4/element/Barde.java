@@ -36,10 +36,16 @@ public class Barde extends Personnage {
 			while (i < equipe.size() && !favorable) {
 				membre = equipe.get(i++);
 				favorable = actions.simulation(membre,refPlusProche,arene);
+				if (!favorable) membre = equipe.get(0);
+				arene.consoleFromRef(membre).getVueElement().setPoint(dest);
+				setRechargement(80);
 			}
-			if (!favorable) membre = equipe.get(0);
-			arene.consoleFromRef(membre).getVueElement().setPoint(dest);
-			setRechargement(80);
 		}
+		else{
+	        	parler("Je vais vers mon voisin " + refPlusProche, ve);
+	        	deplacements.seDirigerVers(refPlusProche);
+			}
+
+		
 	}
 }
