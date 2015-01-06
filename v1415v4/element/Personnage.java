@@ -40,11 +40,11 @@ public class Personnage extends Element implements IPersonnage {
 	 * @param force
 	 * @param charisme
 	 */
-	public Personnage(String nom, int force, int charisme) {
+	public Personnage(String nom, int force, int charisme, int vitesse) {
 		super(nom);
 		ajouterCaract("force", force);
 		ajouterCaract("charisme", charisme);
-		ajouterCaract("vitesse", 1);
+		ajouterCaract("vitesse", vitesse);
 		ajouterCaract("invisibilite", 0);
 		ajouterCaract("rechargement",0);
 
@@ -61,11 +61,25 @@ public class Personnage extends Element implements IPersonnage {
 	}
 	
 	/**
+	 * Attribue la valeur de force.
+	 */
+	public void setForce(int force) {
+		ajouterCaract("force", force);
+	}
+	
+	/**
 	 * Retourne la valeur de charisme.
 	 * @return bonus de charisme
 	 */
 	public int getCharisme() {
 		return getCaract("charisme");
+	}
+	
+	/**
+	 * Attribue la valeur de charisme.
+	 */
+	public void setCharisme(int charisme) {
+		ajouterCaract("charisme", charisme);
 	}
 	
 	/**
@@ -88,7 +102,7 @@ public class Personnage extends Element implements IPersonnage {
 	 * Attribue la valeur de invisibilite.
 	 */
 	public void setInvisibilite(int invisibilite) {
-		caract.put("invisibilite",invisibilite);
+		ajouterCaract("invisibilite", invisibilite);
 	}
 	
 	/**
@@ -111,7 +125,7 @@ public class Personnage extends Element implements IPersonnage {
 	 * Attribue la valeur de rechargement.
 	 */
 	public void setRechargement(int rechargement) {
-		caract.put("rechargement",rechargement);
+		ajouterCaract("rechargement", rechargement);
 	}
 	
 	/**
@@ -189,7 +203,7 @@ public class Personnage extends Element implements IPersonnage {
 	
 	public void pouvoir(VueElement ve, Integer refRMI, VueElement cible, int refPlusProche,
 			Actions actions, Deplacements deplacements, Hashtable<Integer,VueElement> voisins) throws RemoteException {
-		//pouvoir est red�finie selon le type de personnage.
+		//pouvoir est redefinie selon le type de personnage.
 	}
 	
 	
