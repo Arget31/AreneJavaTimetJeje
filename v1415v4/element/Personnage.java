@@ -88,7 +88,7 @@ public class Personnage extends Element implements IPersonnage {
 	 * Attribue la valeur de invisibilite.
 	 */
 	public void setInvisibilite(int invisibilite) {
-		caract.put("invisibilite",invisibilite);
+		ajouterCaract("invisibilite",invisibilite);
 	}
 	
 	/**
@@ -111,7 +111,7 @@ public class Personnage extends Element implements IPersonnage {
 	 * Attribue la valeur de rechargement.
 	 */
 	public void setRechargement(int rechargement) {
-		caract.put("rechargement",rechargement);
+		ajouterCaract("rechargement",rechargement);
 	}
 	
 	/**

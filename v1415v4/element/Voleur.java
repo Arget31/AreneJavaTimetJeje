@@ -18,11 +18,10 @@ public class Voleur extends Personnage {
 
 	public void pouvoir(VueElement ve, Integer refRMI, VueElement cible, int refPlusProche,
 			Actions actions, Deplacements deplacements, Hashtable<Integer,VueElement> voisins) throws RemoteException {
-			Point tamp = new Point();
 		if(!actions.simulation(refRMI,refPlusProche,ve.getControleur().getArene())){
         		parler("Je me camoufle et me dirige vers mon voisin" + refPlusProche, ve);
 				setInvisibilite(10);
-				deplacements.seDirigerVers(tamp);
+				deplacements.seDirigerVers(0);
 				setRechargement(60);
 		}
 		else{

@@ -5,6 +5,7 @@ import interaction.Deplacements;
 import interfaceGraphique.VueElement;
 
 import java.rmi.RemoteException;
+import java.util.Hashtable;
 
 public class Mage extends Personnage {
 
@@ -14,7 +15,8 @@ public class Mage extends Personnage {
 		super("Mage", 80, 130);
 	}
 
-	public void pouvoir(VueElement ve, int refPlusProche, Integer refRMI, Actions actions, Deplacements deplacements) throws RemoteException{
+	public void pouvoir(VueElement ve, Integer refRMI, VueElement cible, int refPlusProche,
+			Actions actions, Deplacements deplacements, Hashtable<Integer,VueElement> voisins) throws RemoteException{
 	
 		if(!actions.simulation(refRMI,refPlusProche,ve.getControleur().getArene())){
 	        	parler("Je me teleporte !", ve);
