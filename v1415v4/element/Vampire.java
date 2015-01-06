@@ -15,7 +15,7 @@ public class Vampire extends Personnage {
 	private static final long serialVersionUID = 1L;
 	
 	public Vampire() {
-		super("Vampire",100,100);
+		super("Vampire", 100, 100, 1);
 	}
 	//pouvoir basé sur l'aléatoire, le vampire a 50% de chance de voler des caractéristique a sa cible, il peut aussi simmplemen les réduire ou bien 25% de chance de les augmenter
 	public void pouvoir(VueElement ve, Integer refRMI, VueElement cible, int refPlusProche,
