@@ -76,7 +76,7 @@ public class Actions implements IActions {
 			String s = enumCaract.nextElement();
 			Integer val = per.getElement().getCaract(s);
 			
-			if (val != null) {
+			if (val != null && s!="vie") {
 				nouvellesValeursPer.put(s, val + valeursPot.get(s));
 			}
 			
