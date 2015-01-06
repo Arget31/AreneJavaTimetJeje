@@ -142,19 +142,8 @@ public class DuelBasic implements IDuel {
 	public boolean estCombatFavorable() throws RemoteException {
 		Personnage pAtt = (Personnage) attaquant.getElement();
 		Personnage pDef = (Personnage) defenseur.getElement();
-	
-		int attCharisme = pAtt.getCharisme();
-		int attForce = pAtt.getForce();
-		int defCharisme = pDef.getCharisme();
-		int defForce = pDef.getForce();
 		
-		if(attCharisme > defForce) {
-			return true;	
-		} 
-		else if(attForce >= defCharisme) {
-			return true;
-		}
-		return false;
+		return pAtt.getCharisme() > pDef.getForce() && pAtt.getForce() >= pDef.getCharisme();
 	}
 
 }

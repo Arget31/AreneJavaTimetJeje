@@ -23,10 +23,6 @@ public class Actions implements IActions {
      * Ref RMI et les vues des voisins.
      */
     private Hashtable<Integer,VueElement> voisins;
-    /**
-     * Initialise a faux, vrai si une action a deja ete executee.
-     */
-    private boolean actionExecutee;
 
     public Actions(VueElement ve, Hashtable<Integer, VueElement> voisins) {
         this.ve = ve;
@@ -36,8 +32,6 @@ public class Actions implements IActions {
         } else {
         	this.setVoisins(voisins);
         }
-        
-        actionExecutee = false;
     }
 
     
@@ -50,24 +44,18 @@ public class Actions implements IActions {
 	 * @param arene arene
 	 */
 	public void ramasser(int ref1, int ref2, IArene arene) throws RemoteException {
-    	if(actionExecutee) {
-    		System.err.println("Une action a deja ete executee pendant ce tour !");
-    	} else {
-			//recupere le combattant et la potion			
-		    IConsole combattant = arene.consoleFromRef(ref1); 
-		    IConsole potion = arene.consoleFromRef(ref2); 
+		//recupere le combattant et la potion			
+	    IConsole combattant = arene.consoleFromRef(ref1); 
+	    IConsole potion = arene.consoleFromRef(ref2); 
 
-		    // effectue le ramassage
-		    // si les deux sont vivants (ils peuvent etre presents mais sans vie)
-		    if(combattant.getElement().getVie() > 0 && potion.getElement().getVie() > 0) { 
-			    VueElement vCombattant = combattant.getVueElement();
-			    Actions ramassage = new Actions(vCombattant, null);
-			    
-			    ramassage.ramasserPotion(potion, combattant);
-		    	 
-				actionExecutee = true;
-		    }
-    	}
+	    // effectue le ramassage
+	    // si les deux sont vivants (ils peuvent etre presents mais sans vie)
+	    if(combattant.getElement().getVie() > 0 && potion.getElement().getVie() > 0) { 
+		    VueElement vCombattant = combattant.getVueElement();
+		    Actions ramassage = new Actions(vCombattant, null);
+		    
+		    ramassage.ramasserPotion(potion, combattant);
+	    }
 	}
 	
 	
@@ -92,9 +80,8 @@ public class Actions implements IActions {
 				nouvellesValeursPer.put(s, val + valeursPot.get(s));
 			}
 			
-			//valeursPot.put(s, 0); //on vide toute la potion, meme si elle ne correspond pas aux caract. du perso ?
-			
-			//pot.majCaractElement(valeursPot);
+			valeursPot.put(s, 0); //on vide toute la potion
+			pot.majCaractElement(valeursPot);
 		}
 		
 		// mise a jour du personnage
@@ -114,47 +101,35 @@ public class Actions implements IActions {
 	 * @param arene arene
 	 */
 	public void interaction(int ref1, int ref2, IArene arene) throws RemoteException {
-    	if(actionExecutee) {
-    		System.err.println("Une action a deja ete executee pendant ce tour !");
-    	} else {
-			 // recupere l'attaquant et le defenseur
-		    IConsole attaquant = arene.consoleFromRef(ref1);
-		    IConsole defenseur = arene.consoleFromRef(ref2);
-		     
-		    // cree le duel
-		    // si les deux sont vivants (ils peuvent etre presents mais sans vie)
-		    if(attaquant.getElement().getVie() > 0 && defenseur.getElement().getVie() > 0) { 
-			    DuelBasic duel = new DuelBasic(arene, attaquant, defenseur);
-				
-				duel.realiserCombat(); 
-				
-				actionExecutee = true;
-		    }
-    	}
+		 // recupere l'attaquant et le defenseur
+	    IConsole attaquant = arene.consoleFromRef(ref1);
+	    IConsole defenseur = arene.consoleFromRef(ref2);
+	     
+	    // cree le duel
+	    // si les deux sont vivants (ils peuvent etre presents mais sans vie)
+	    if(attaquant.getElement().getVie() > 0 && defenseur.getElement().getVie() > 0) { 
+		    DuelBasic duel = new DuelBasic(arene, attaquant, defenseur);
+			
+			duel.realiserCombat();
+	    }
 	}
 
 	public boolean simulation(int ref1,int ref2,IArene arene) throws RemoteException{
 	    IConsole attaquant = arene.consoleFromRef(ref1);
 	    IConsole defenseur = arene.consoleFromRef(ref2);
 	     
-	    // cree le faux duel
-		    DuelBasic duel = new DuelBasic(arene, attaquant, defenseur);
-			
-			return duel.estCombatFavorable(); 
-			
+	    // cree la simulation de duel
+	    DuelBasic duel = new DuelBasic(arene, attaquant, defenseur);
+		return duel.estCombatFavorable();
 	}
 
 	public Hashtable<Integer,VueElement> getVoisins() {
 		return voisins;
 	}
 
-
-
 	public void setVoisins(Hashtable<Integer,VueElement> voisins) {
 		this.voisins = voisins;
 	}
-
-
 
 	public VueElement getVe() {
 		return ve;

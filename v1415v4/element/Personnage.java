@@ -92,6 +92,14 @@ public class Personnage extends Element implements IPersonnage {
 	}
 	
 	/**
+	 * Decremente la valeur de invisibilite.
+	 */
+	public void majInvisibilite() {
+		int invisibilite = getInvisibilite();
+		if (invisibilite > 0) setInvisibilite(invisibilite - 1);
+	}
+	
+	/**
 	 * Retourne la valeur de rechargement.
 	 * @return bonus de rechargement
 	 */
@@ -104,6 +112,14 @@ public class Personnage extends Element implements IPersonnage {
 	 */
 	public void setRechargement(int rechargement) {
 		caract.put("rechargement",rechargement);
+	}
+	
+	/**
+	 * Decremente la valeur de rechargement.
+	 */
+	public void majRechargement() {
+		int rechargement = getRechargement();
+		if (rechargement > 0) setRechargement(rechargement - 1);
 	}
 	
 	/**
@@ -140,7 +156,7 @@ public class Personnage extends Element implements IPersonnage {
 			}
 		}
 		
-		return super.toString() + "[" + getForce() + ", " + getCharisme() + lead + eq + "]";
+		return super.toString() + "[" + getForce() + ", " + getCharisme() + lead + eq + "](" + getRechargement() + ")";
 	}
 	
 	
@@ -171,8 +187,9 @@ public class Personnage extends Element implements IPersonnage {
 		equipe.clear();
 	}
 	
-	public void pouvoir(VueElement ve, int refPlusProche, Integer refRMI,Actions actions, Deplacements deplacements)throws RemoteException{
-		//pouvoir est redéfinie selon le type de personnage.
+	public void pouvoir(VueElement ve, Integer refRMI, VueElement cible, int refPlusProche,
+			Actions actions, Deplacements deplacements, Hashtable<Integer,VueElement> voisins) throws RemoteException {
+		//pouvoir est redï¿½finie selon le type de personnage.
 	}
 	
 	
@@ -187,60 +204,66 @@ public class Personnage extends Element implements IPersonnage {
 	public void strategie(VueElement ve, Hashtable<Integer,VueElement> voisins, Integer refRMI) throws RemoteException {
         Actions actions = new Actions(ve, voisins); //je recupere les voisins (distance < 10)
         Deplacements deplacements = new Deplacements(ve,voisins);
+        int vitesse = getVitesse();
         
-        if (voisins.size()== 0) { // je n'ai pas de voisins, j'erre
-        	parler("J'erre...", ve);
-        	deplacements.seDirigerVers(0); //errer    
-        } 
-        else {
-			VueElement cible = Calculs.chercherElementProche(ve, voisins);
-			
-			int distPlusProche = Calculs.distanceChebyshev(ve.getPoint(), cible.getPoint());
-			
-			int refPlusProche = cible.getRef();
-			Element elemPlusProche = cible.getControleur().getElement();
-			
-			// dans la meme equipe ?
-			boolean memeEquipe = false;
-			
-			if(elemPlusProche instanceof Personnage) {
-				memeEquipe = (getLeader() != -1 && getLeader() == ((Personnage) elemPlusProche).getLeader()) || // meme leader
-						getLeader() == refPlusProche || // cible est le leader de this
-						((Personnage) elemPlusProche).getLeader() == refRMI || // this est le leader de cible
-						((Personnage) elemPlusProche).getInvisibilite()>0;//cible invisible.
-			}
-			
-			if(distPlusProche <= 2) { // si suffisamment proches
-				if(elemPlusProche instanceof Potion) { // potion
-					// ramassage
-					parler("Je ramasse une potion", ve);
-					actions.ramasser(refRMI, refPlusProche, ve.getControleur().getArene());
-					
-				} else { // personnage
-					if(!memeEquipe) { // duel seulement si pas dans la meme equipe (pas de coup d'etat possible dans ce cas)
-						// duel
-						parler("Je fais un duel avec " + refPlusProche, ve);
-						actions.interaction(refRMI, refPlusProche, ve.getControleur().getArene());
-					} else {
+        for (int i = 0; i < vitesse; i++) {
+	        if (voisins.size()== 0) { // je n'ai pas de voisins, j'erre
+	        	parler("J'erre...", ve);
+	        	deplacements.seDirigerVers(0); //errer    
+	        } 
+	        else {
+				VueElement cible = Calculs.chercherElementProche(ve, voisins);
+				
+				int distPlusProche = Calculs.distanceChebyshev(ve.getPoint(), cible.getPoint());
+				
+				int refPlusProche = cible.getRef();
+				Element elemPlusProche = cible.getControleur().getElement();
+				
+				// dans la meme equipe ?
+				boolean memeEquipe = false;
+				
+				if(elemPlusProche instanceof Personnage) {
+					memeEquipe = (getLeader() != -1 && getLeader() == ((Personnage) elemPlusProche).getLeader()) || // meme leader
+							getLeader() == refPlusProche || // cible est le leader de this
+							((Personnage) elemPlusProche).getLeader() == refRMI || // this est le leader de cible
+							((Personnage) elemPlusProche).getInvisibilite()>0;//cible invisible.
+				}
+				
+				if(distPlusProche <= 2) { // si suffisamment proches
+					if(elemPlusProche instanceof Potion) { // potion
+						// ramassage
+						parler("Je ramasse une potion", ve);
+						actions.ramasser(refRMI, refPlusProche, ve.getControleur().getArene());
+						
+					} else { // personnage
+						if(!memeEquipe) { // duel seulement si pas dans la meme equipe (pas de coup d'etat possible dans ce cas)
+							// duel
+							parler("Je fais un duel avec " + refPlusProche, ve);
+							actions.interaction(refRMI, refPlusProche, ve.getControleur().getArene());
+							setInvisibilite(0);
+						} else {
+				        	parler("J'erre...", ve);
+				        	deplacements.seDirigerVers(0); // errer
+						}
+					}
+				} else { // si voisins, mais plus eloignes
+					if(!memeEquipe) { // potion ou enemmi
+						if(elemPlusProche instanceof Personnage && getRechargement()==0){
+								pouvoir(ve, refRMI, cible, refPlusProche, actions, deplacements, voisins);
+						}
+						else{
+							// je vais vers le plus proche
+				        	parler("Je vais vers mon voisin " + refPlusProche, ve);
+				        	deplacements.seDirigerVers(refPlusProche);
+						}
+					} else{
 			        	parler("J'erre...", ve);
 			        	deplacements.seDirigerVers(0); // errer
 					}
 				}
-			} else { // si voisins, mais plus eloignes
-				if(!memeEquipe) { // potion ou enemmi
-					if(elemPlusProche instanceof Personnage && getRechargement()==0){
-							pouvoir(ve, refPlusProche, refRMI, actions, deplacements);
-					}
-					else{
-						// je vais vers le plus proche
-			        	parler("Je vais vers mon voisin " + refPlusProche, ve);
-			        	deplacements.seDirigerVers(refPlusProche);
-					}
-				} else{
-		        	parler("J'erre...", ve);
-		        	deplacements.seDirigerVers(0); // errer
-				}
-			}
+	        }
         }
+        majInvisibilite();
+        majRechargement();
 	}
 }

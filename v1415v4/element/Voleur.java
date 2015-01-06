@@ -5,6 +5,7 @@ import interaction.Deplacements;
 import interfaceGraphique.VueElement;
 
 import java.rmi.RemoteException;
+import java.util.Hashtable;
 
 public class Voleur extends Personnage {
 
@@ -14,13 +15,14 @@ public class Voleur extends Personnage {
 		super("Voleur", 80, 120);
 	}
 
-	public void pouvoir(VueElement ve, int refPlusProche, Integer refRMI, Actions actions, Deplacements deplacements) throws RemoteException{
+	public void pouvoir(VueElement ve, Integer refRMI, VueElement cible, int refPlusProche,
+			Actions actions, Deplacements deplacements, Hashtable<Integer,VueElement> voisins) throws RemoteException {
 
 		if(!actions.simulation(refRMI,refPlusProche,ve.getControleur().getArene())){
-				setInvisibilite(5);
-				setRechargement(30);
-	        	parler("Je me camoufle et j'erre ...", ve);
-				deplacements.seDirigerVers(0);
+        		parler("Je me camoufle et me dirige vers mon voisin" + refPlusProche, ve);
+				setInvisibilite(10);
+				deplacements.seDirigerVers(refPlusProche);
+				setRechargement(60);
 		}
 		else{
         	parler("Je vais vers mon voisin " + refPlusProche, ve);

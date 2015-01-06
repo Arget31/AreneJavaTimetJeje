@@ -5,6 +5,7 @@ import interaction.Deplacements;
 import interfaceGraphique.VueElement;
 
 import java.rmi.RemoteException;
+import java.util.Hashtable;
 
 import utilitaires.Calculs;
 
@@ -16,12 +17,11 @@ public class Guerrier extends Personnage {
 		super("Guerrier", 150, 50);
 	}
 
-	public void pouvoir(VueElement ve, int refPlusProche, Integer refRMI, Actions actions, Deplacements deplacements) throws RemoteException{
+	public void pouvoir(VueElement ve, Integer refRMI, VueElement cible, int refPlusProche,
+			Actions actions, Deplacements deplacements, Hashtable<Integer,VueElement> voisins) throws RemoteException {
 		
-		VueElement cible = ve.getControleur().getArene().consoleFromRef(refPlusProche).getVueElement();
 		int distPlusProche;
 		
-		setRechargement(30);
     	parler("Je fonce vers " + refPlusProche, ve);
     	for (int i = 0; i < 10; i++) {
 	    	deplacements.seDirigerVers(refPlusProche);
@@ -31,5 +31,6 @@ public class Guerrier extends Personnage {
     	if (distPlusProche <= 2) {
     		actions.interaction(refRMI, refPlusProche, ve.getControleur().getArene());
     	}
+		setRechargement(90);
 	}
 }
