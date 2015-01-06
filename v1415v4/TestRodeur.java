@@ -7,7 +7,7 @@ import element.*;
 /**
  * Test de la Console avec un Element qui s'ajoute a l'Arene (apres lancement Arene et IHM). A lancer en plusieurs exemplaires.
  */
-public class TestBarde {
+public class TestRodeur {
 
 	/**
 	 * @param args
@@ -22,9 +22,9 @@ public class TestBarde {
 			String ipArene = "localhost";
 			if(args.length != 0) if(args[1] != "") ipArene = args[1];
 	
-			Personnage barde = new Barde();
+			Personnage rodeur = new Rodeur();
 			Random r = new Random();
-			new Console(barde, r.nextInt(100), r.nextInt(100), port, ipArene);
+			new Console(rodeur, r.nextInt(100), r.nextInt(100), port, ipArene);
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
