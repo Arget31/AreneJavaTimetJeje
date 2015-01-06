@@ -57,6 +57,7 @@ public class Potion extends Element {
 
 	@Override
 	public String toString(){
-		return super.toString() + "[" + getForce() + ", " + getCharisme() + "]";
+		return super.toString() + "[" + getForce() + ", " + getCharisme() 
+				+ "," + getCharisme() + "," + getInvisibilite() + "]";
 	}
 }
